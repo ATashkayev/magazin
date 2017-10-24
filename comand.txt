@@ -1,0 +1,13 @@
+ubuntu@ubuntu-VD:~$ workon magazin
+(magazin) ubuntu@ubuntu-VD:~$ cd magazin/
+(magazin) ubuntu@ubuntu-VD:~/magazin$ ./manage.py dbshell смотреть на таблицы
+
+(magazin) ubuntu@ubuntu-VD:~/magazin$ ./manage.py shell менять таблицы
+
+instructor.models import Instructor
+
+
+(magazin) ubuntu@ubuntu-VD:~/magazin$ ./manage.py createsuperuser
+
+a.tashkayev	Atass110
+
