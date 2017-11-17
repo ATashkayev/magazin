@@ -5,6 +5,37 @@ from django.http import JsonResponse, HttpResponseRedirect
 from decimal import *
 from django.db.models import Sum
 from orders.form_basket_uot import Checkout_contact_form
+import threading
+import smtplib
+from email.header import Header
+from email.mime.text import MIMEText
+
+def send_email(order_id):
+
+    fromaddr = MIMEText('t1@opendog.com.ua'.encode('utf-8'), _charset='utf-8')
+    toaddrs = MIMEText('a.tashkayev@ukringroup.ua'.encode('utf-8'), _charset='utf-8')
+
+    msg = ("From: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n" % (fromaddr, toaddrs, 'New order : '))
+
+    message = msg + order_id
+
+    #message = MIMEText(message.encode('utf-8'), _charset='utf-8')
+
+    smtpObj = smtplib.SMTP_SSL("skm163.hostsila.org", 465)
+
+    try:
+        smtpObj.login('t1@opendog.com.ua', "Zzz4995632")
+    except Exception as e:
+        print('Login Failed!')
+        print(e)
+
+    try:
+        smtpObj.sendmail(fromaddr, toaddrs, message)
+    except Exception as e:
+        print('SendMail Failed')
+        print(e)
+
+    smtpObj.quit()
 
 
 def basket_adding(request):
@@ -17,14 +48,17 @@ def basket_adding(request):
     product_id = data.get('product_id')
 
     is_delete = data.get('is_delete')
-    print(data)
+
     if is_delete == 'true':
-        print(is_delete)
+        #print(is_delete)
         prod, is_create = ProductInBasket.objects.get_or_create(session_key=session_key, product_id=product_id)
         prod.is_active = False
         prod.save(force_update=True)
     else:
-        nmb = int(data.get('nmb'))
+        if data.get('nmb') == '':
+            nmb = 1
+        else:
+            nmb = int(data.get('nmb'))
         price = Decimal(data.get('price'))
         total_amount = nmb * price
         new_prod, is_create = ProductInBasket.objects.get_or_create(session_key=session_key, product_id=product_id,
@@ -70,7 +104,7 @@ def chek_out(request):
     products_in_basket = ProductInBasket.objects.filter(session_key=session_key, is_active=True)
     products_total_amount = products_in_basket.aggregate(Sum('total_amount'))
     products_total_amount = products_total_amount['total_amount__sum']
-    print(request.POST)
+    #print(request.POST)
     if request.POST:
         if form.is_valid():
             # form.is_valid()
@@ -91,7 +125,7 @@ def chek_out(request):
             for name, value in data.items():
                 if name.startswith("product_in_basket_"):
                     product_in_basket_id = name.split("product_in_basket_")[1]
-                    product_in_basket = ProductInBasket.objects.get(product_id=product_in_basket_id)
+                    product_in_basket = ProductInBasket.objects.get(session_key=session_key, product_id=product_in_basket_id)
                     product_in_basket.numb = int(value)
                     product_in_basket.order = order
                     product_in_basket.save(force_update=True)
@@ -101,6 +135,11 @@ def chek_out(request):
             products_in_basket.delete()
             products_in_basket = 'ЗАКАЗАЛИ'
             products_total_amount = order.id
+            order_id = list()
+            order_id.append(str(order.id))
+            #print(order_id[0])
+            threading.Thread(target=send_email, args=(order_id)).start()
+
             return HttpResponseRedirect(request.META['HTTP_REFERER'])
         
         else:
