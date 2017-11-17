@@ -19,14 +19,18 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.conf.urls.static import static
 from instructor.views import home, clothes, list_instructor, instructor_id
+from django.conf import settings
+from products.views import *
 
+print(url)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', home),
     url(r'^index/', home),
     url(r'^index_clothes/', clothes),
-    url(r'^list_instructors/', list_instructor),
-    url(r'^instr_id/(\d+)/', instructor_id, name="instr_id"),
-]
-
+    url(r'^checkout/$', chek_out, name="chek_out"),
+    url(r'^basket/$', basket_adding, name="basketadding"),
+    url(r'^product/(?P<product_id>\w+)/$', product_, name="productid"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#urlpatterns += staticfiles_urlpatterns()

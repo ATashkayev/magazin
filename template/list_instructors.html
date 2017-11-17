@@ -20,15 +20,21 @@
   </head>
   <body>
 
-    
-<nav class="container">
-  <div class="jumbotron">
-   <h1>Instructors__</h1>
-	{% for i in instructors %}
-	<p><a href ="{% url 'instr_id' i.id %}">{{ i.name }}<a></p1>
-	{% endfor %}
-  </div><!-- /.container-fluid -->
-</nav>
+
+  <nav class="container">
+      <div class="jumbotron">
+          <h1>Instructors__</h1>
+          {% for i in instructors %}
+          <p><a href="{% url 'instr_id' i.id %}">{{ i.name }}<a></p1>
+              <div class="container">​
+                  <picture>
+                      <img src="{{ i.first_foto.url }} " class="img-thumbnail"/>
+                  </picture>
+                      <p><a href=""></a> {{ i.sp_foto }} </p1>
+                  {% endfor %}
+              </div>
+      </div><!-- /.container-fluid -->
+  </nav>
 
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

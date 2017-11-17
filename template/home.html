@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="text-center">
+                    Новые поступления
+                </h1>
+            </div>
+            {% for i_product in products %}
+            <div class="col-lg-4">
+                <div class="product-item">
+                    <div>
+                        <a href="{% url 'productid' i_product.id %}">
+                            <img src="{{ i_product.first_foto.url }}" class="img-responsive">
+                        </a>
+                    </div>
+                    {% if i_product.discount %}
+                    <div class="discount">
+                        <span>{{ i_product.discount }} %</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="productinfo text-center">
+                        <h2>{{ i_product.price }}</h2>
+                        <p>{{ i_product.name }}</p>
+                    </div>
+
+                        <div class="col-xs-12 col-xs-offset-0" style="position: absolute;
+  left: 0;
+  bottom: 0;  height: 10%;">
+                            <a href="{% url 'productid' i_product.id %}"
+                               class="btn btn-success" style="width: 100%; margin-bottom: 8px;">
+                                Купить
+                                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span></a>
+                        </div>
+
+
+                    <!-- Nav tabs -->
+                    <!--<ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#description" aria-controls="home" role="tab"
+                                                                  data-toggle="tab">Описание</a></li>
+                        <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Наличие размеров</a>
+                        </li>
+                    </ul> -->
+
+                    <!-- Tab panes -->
+                    <!--<div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="description">
+                            <div class="productinfo text-center">{{ i_product.description }}</div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="profile">
+                            <div class="productinfo text-center">{{ i_product.size }}</div>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

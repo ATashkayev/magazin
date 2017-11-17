@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <!--{% for image in foto_product %}
+
+            <div class="product-foto">
+                <img src="{{ image.foto.url }}" class="img-responsive">
+            </div>
+
+            {% endfor %}-->
+
+
+            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+
+                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                    {% for image in foto_product %}
+                    <li data-target="#carousel-example-generic" data-slide-to="{{ image.counter }}"></li>
+                    {% endfor %}
+                </ol>
+
+                <!-- Wrapper for slides -->
+
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        <img src="{{ item_product.first_foto.url }}" alt="0">
+                        <div class="carousel-caption"></div>
+                    </div>
+                    {% for image in foto_product %}
+                    <div class="item">
+                        <img src="{{ image.foto.url }}" alt="{{ image.counter }}">
+                        <div class="carousel-caption"></div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- Controls -->
+                <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+
+
+        </div>
+        <div class="col-lg-6">
+
+            <h1 class="text-center">
+                {{ item_product.name }}
+            </h1>
+            <div>
+                <h3>
+                    {{ item_product.price }} UAH
+                </h3>
+            </div>
+            <div>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#description" aria-controls="home" role="tab"
+                                                              data-toggle="tab">Описание</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Наличие размеров</a>
+                    </li>
+                    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Доставка</a>
+                    </li>
+                    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Что-то еще</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="description">
+                        {{ item_product.description }}
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        {{ item_product.size }}
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="messages">Описание условий доставки (написано просто в тексте шаблона)</div>
+                    <div role="tabpanel" class="tab-pane" id="settings">что-то еще выведем если надо</div>
+                </div>
+            </div>
+            <div>
+                <form method="POST" action="{% url 'basketadding' %}"  id="form_buy_product"  class="form-inline"> {% csrf_token %}
+                    <div class="form-group">
+                        <input type="number" class="form-control" id="number_prod" name="number_prod">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="submit_btn" product_name = "{{ item_product.name }}"
+                                product_id = "{{ item_product.id }}" product_price = "{{ item_product.price }}">
+                            Добавить в корзину
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

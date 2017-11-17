@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+{% load static %}
+
+<div class="container">
+    <div class="row">
+
+        {% if order_in_session %}
+        <div class="col-lg-10 col-lg-offset-1">
+            <h3 class="text-center">Спасибо за заказ. Ваш заказ принят.</h3>
+            <h4 class="text-center">Ваш номер заказа № {{ order_in_session.0.order.id }}</h4>
+            <h4 class="text-center">Мы свяжемся с Вами в ближайшее время .</h4>
+        </div>
+
+        {% elif products_in_basket %}
+
+        <div class="col-lg-10 col-lg-offset-1">
+            <h3 class="text-center">Товары в корзине</h3>
+
+            <form class="form-vertical" method="post"> {% csrf_token %}
+                {{ form.errors }}
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Название товара</th>
+                        <th>Количество</th>
+                        <th>Цена за еденицу</th>
+                        <th>Общая цена</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for product_in_basket in products_in_basket %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'productid' product_in_basket.product.id %}">
+                                {{ product_in_basket.product.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <input value="{{ product_in_basket.numb }}" type="number"
+                                   class="product-in-basket-nmb"
+                                   name="product_in_basket_{{ product_in_basket.product.id }}">
+                        </td>
+                        <td>
+                                            <span class="product-price">
+                                                {{ product_in_basket.product.price}}
+                                            </span>
+                        </td>
+                        <td>
+                                            <span class="total-product-in-basket-amount">
+                                                {{ product_in_basket.total_amount }}
+                                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="text-right">
+                    <b>Сумма заказа: </b> <span id="total_order_amount"> {{ products_total_amount }}  </span>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <div class="col-lg-6">
+                        <label>Имя</label>
+                        <span class="form-error">{{ form.name.errors }}</span>
+                        <input type="text" name="{{ form.name.html_name }}" class="form-control"
+                               value="{{ request.POST.name }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-6">
+                        <label>Телефон</label>
+                        <span class="form-error">{{ form.phone.errors }}</span>
+                        <input type="text" name="{{ form.phone.html_name }}" class="form-control"
+                               value="{{ request.POST.phone }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <label>Адрес доставки</label>
+                        <span class="form-error">{{ form.adress.errors }}</span>
+                        <input type="text" name="{{ form.adress.html_name }}" class="form-control"
+                               value="{{ request.POST.adress }}"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsPost" id="optionsRadios1" value="НоваяПочта" checked>
+                            Новая Почта
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsPost" id="optionsRadios2" value="УКРПОЧТА">
+                            УКР ПОЧТА
+                        </label>
+                    </div>
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <label>Примечания</label>
+                        <span class="form-error">{{ form.comment.errors }}</span>
+                        <input type="text" name="{{ form.comment.html_name }}" class="form-control"
+                               value="{{ request.POST.comment }}">
+                    </div>
+                </div>
+
+                <hr style="width: 100%; margin-top: 1px; color:white; height: 1px; background-color:white;">
+
+
+                <div class="text-right">
+
+                    <button type="submit" class="btn btn-primary btn-lg">Заказать</button>
+
+                </div>
+
+            </form>
+
+        </div>
+        {% else %}
+        <h3 class="text-center">В Вашей корзине нет товаров</h3>
+        {{ products_total_amount }}
+        {% endif %}
+
+    </div>
+</div>
+
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+
+<script src="{% static 'js/script_t.js' %}"></script>
+
+</body>
+</html>
